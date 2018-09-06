@@ -13,16 +13,60 @@ Description de la première doc API
 - Response 200 (application/json)
 
 
-# Group Photos
+# Group Images
 
-### Poster une image [POST /images/post]
+### Poster une image [POST /images/{albumId}]
++ Request (image/jpeg)
++ Parameter
+    + albumId (number, required) - l'id de l'album dans lequel ajouter l'image
 - Response 200 (application/json)
 
-### Get une image en particulier [GET /images/imageId]
+### Supprimer une image [DELETE /images/{imgToDelete}]
++ Parameters
+    + imgToDelete (number, required) -  l'id de l'image à supprimer
 - Response 200 (application/json)
 
+### Get une image en particulier [GET /images/singleImage/{imageId}/{miniature}]
++ Parameter
+    + imageId (number, required) - l'id de l'image à charger
+    + miniature (boolean, required ) - si true, renvoie une miniature
+- Response 200 (application/json)
 
 # Group Albums
 
-### Get la liste de tous les albums [GET /albums]
+### Créer un album [POST /albums]
++ Request (application/json)
+    + Attributes
+        + albumName (string, required) - le nom de l'album à créer
+        + category (number, required) - la catégorie dans laquelle placer l'album
 - Response 200 (application/json)
+
+### Modifier un album [PATCH /albums/{albumId}]
++ Parameters
+    + albumId (number, required) -  l'id de l'album à modifier
++ Request (application/json)
+    + Attributes
+        + albumName (string, required) - le nom de l'album à créer
+        + category (number, required) - la catégorie dans laquelle placer l'album
+- Response 200 (application/json)
+
+### Supprimer un album [DELETE /albums/{albumToDelete}]
++ Parameters
+    + albumToDelete (number, required) -  l'id de l'album à supprimer
+- Response 200 (application/json)
+
+### Get la liste de tous les albums [GET /albums/{category}]
++ Parameters
+    + category (number, optional) - 1 : meute, 2: troupe, 3: groupe
+- Response 200 (application/json)
+    + Attributes (array[Album])
+
+## Data Structures
+
+### Album
++ albumName (string) - le nom de l'album
++ category (number) - l'id de la catégorie de l'album
++ photos (array[Photo])
+
+### Photo
++ photoId (number) - l'id de la photo
