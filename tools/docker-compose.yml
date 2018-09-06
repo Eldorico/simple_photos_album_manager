@@ -1,0 +1,10 @@
+version: '3.1' # minimum version 2
+services: # containers. (we can have multiple containers)
+    api-renderer:  # the service name you want (not the container name). It si also the DNS name inside the network
+        build:
+            context: .
+            dockerfile: 'APIRenderer.dockerfile'
+        working_dir: /root/
+        volumes:
+            - ../doc/api:/root/
+        entrypoint: bash -c "while true; do sleep 1000; done" &
