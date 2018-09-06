@@ -7,4 +7,15 @@ services: # containers. (we can have multiple containers)
         working_dir: /root/api_documentation
         volumes:
             - ../doc/api:/root/api_documentation
-        entrypoint: bash -c "while true; do sleep 1000; done" 
+        entrypoint: bash -c "while true; do sleep 500; done"
+    api-server:
+        build:
+            context: .
+            dockerfile: 'php_mysql_server.dockerfile'
+        volumes:
+            - ../api/:/app
+        ports:
+            - "8080:80"
+        volumes:
+            - ../api:/var/www/html
+        entrypoint: bash /api_server_entrypoint.sh
