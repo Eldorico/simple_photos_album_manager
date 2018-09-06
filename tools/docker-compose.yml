@@ -4,7 +4,7 @@ services: # containers. (we can have multiple containers)
         build:
             context: .
             dockerfile: 'APIRenderer.dockerfile'
-        working_dir: /root/
+        working_dir: /root/api_documentation
         volumes:
-            - ../doc/api:/root/
-        entrypoint: bash -c "while true; do sleep 1000; done" &
+            - ../doc/api:/root/api_documentation
+        entrypoint: bash -c "while true; do sleep 1000; done" 
