@@ -12,6 +12,14 @@ Description de la première doc API
 ### Deconnecter [POST /auth/logout]
 - Response 200 (application/json)
 
+# Group Categories
+
+### Get la liste des catégories [GET /categories]
+- Response 200 (application/json)
+    + Attributes
+        + categories (array[Category])
+
+
 
 # Group Images
 
@@ -59,7 +67,8 @@ Description de la première doc API
 + Parameters
     + category (number, optional) - 1 : meute, 2: troupe, 3: groupe
 - Response 200 (application/json)
-    + Attributes (array[Album])
+    + Attributes
+        + albums (array[Album])
 
 ## Data Structures
 
@@ -70,3 +79,7 @@ Description de la première doc API
 
 ### Photo
 + photoId (number) - l'id de la photo
+
+### Category
++ id (number) - l'id de la categorie
++ name (string) - le nom de la catégorie
