@@ -12,10 +12,9 @@ services: # containers. (we can have multiple containers)
         build:
             context: .
             dockerfile: 'php_mysql_server.dockerfile'
-        volumes:
-            - ../api/:/app
         ports:
             - "8080:80"
         volumes:
-            - ../api:/var/www/html
+            - ../api/src:/var/www/html
+            - ../api/databases:/var/databases
         entrypoint: bash /api_server_entrypoint.sh

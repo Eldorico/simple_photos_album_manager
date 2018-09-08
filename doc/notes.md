@@ -4,6 +4,7 @@ Docker
 
 ```bash
 # lancer les dockers
+docker-compose build
 docker-compose up -d
 
 # stopper les dockers 
