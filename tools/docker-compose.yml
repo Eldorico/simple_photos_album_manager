@@ -10,7 +10,7 @@ services: # containers. (we can have multiple containers)
         entrypoint: bash -c "while true; do sleep 500; done"
     api-server:
         build:
-            context: .
+            context: api_server
             dockerfile: 'php_mysql_server.dockerfile'
         ports:
             - "8080:80"

@@ -7,6 +7,9 @@ DB_FILENAME_TO_IMPORT=api_base.sql
 # leave the rest unchanged for dev
 # --------------------------------------------------------------
 
+# enable mod rewrite
+a2enmod rewrite
+
 # start the services 
 service apache2 start
 service mysql start

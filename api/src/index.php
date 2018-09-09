@@ -1,7 +1,17 @@
 <?php
-    // echo("Wesh!");
-    phpinfo();
-    // erreur de synthaxe
-    // $db = mysqli_connect("127.0.0.1", "admin", "admin", "app_db");
-    // $db->query("INSERT INTO Category VALUES (null, 'meute')");
+
+use \Psr\Http\Message\ServerRequestInterface as Request;
+use \Psr\Http\Message\ResponseInterface as Response;
+
+require 'vendor/autoload.php';
+
+$app = new \Slim\App;
+$app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
+    $name = $args['name'];
+    $response->getBody()->write("Wesh mec $name!");
+
+    return $response;
+});
+$app->run();
+
 ?>
