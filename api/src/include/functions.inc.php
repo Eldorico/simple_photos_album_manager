@@ -2,26 +2,41 @@
 
 require_once('db_functions.inc.php');
 
+define('BAD_REQUEST_CODE', 400);
+define('FORBIDDEN_CODE', 403);
+
 use \Psr\Http\Message\ServerRequestInterface as Request;
 use \Psr\Http\Message\ResponseInterface as Response;
 
 Class Routes {
     static function get_categories(Request $request, Response $response, array $args){
         $json_categories = json_encode(db_get_categories(), true);
-        $response->getBody()->write($json_categories);
-        return $response;
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->write($json_categories);
     }
 
     static function create_album(Request $request, Response $response, array $args){
-        $check_params_result = expect_parameters(array('albumName', 'category'), $request->getParsedBody());
+        $params = $request->getParsedBody();
+
+        $check_params_result = expect_parameters(array('albumName', 'category'), $params);
         if(is_string($check_params_result)){
-            return return_bad_request($response, $check_params_result);
+            return err_response($response, $check_params_result, BAD_REQUEST_CODE);
         }
+
+        $result = db_create_album($params['albumName'], $params['category']);
+        if(is_array($result) && array_key_exists('error' , $result)){
+            return err_response($response, $result['error']['err_msg'], $result['error']['status_code']);
+        }
+
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->write(json_encode(array('albumId' => $result)));
     }
 }
 
-function return_bad_request(Response $response, $err_msg){
-    $response = $response->withStatus(400);
+function err_response(Response $response, $err_msg, $status_code){
+    $response = $response->withStatus($status_code);
     $response->getBody()->write($err_msg);
     return $response;
 }
