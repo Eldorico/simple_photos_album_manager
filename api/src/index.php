@@ -11,6 +11,7 @@ require_once('include/functions.inc.php');
 $app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);
 
 $app->get('/categories', 'Routes::get_categories');
+$app->post('/albums', 'Routes::create_album');
 
 $app->run();
 ?>
