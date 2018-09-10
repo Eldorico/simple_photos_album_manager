@@ -1,3 +1,16 @@
+#### Exemples curl pour l'api
+
+```bash
+# get categories 
+$ curl -i  http://localhost:8080/categories
+
+# create album 
+$ curl -X POST -i http://localhost:8080/albums --data '{"albumName" : "Album Test", "category" : "1"}' --header "Content-Type: application/json" 
+
+```
+
+
+
 #### Commandes utiles
 
 Docker
