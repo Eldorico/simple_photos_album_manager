@@ -6,21 +6,11 @@ require 'vendor/autoload.php';
 
 require_once('include/conf.inc.php');
 require_once('include/db_functions.inc.php');
+require_once('include/functions.inc.php');
 
 $app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);
 
-$app->get('/hello/{name}', function (Request $request, Response $response, array $args) {
+$app->get('/categories', 'Routes::get_categories');
 
-    $name = $args['name'];
-    $response->getBody()->write("Wesh mec $name!<br/>");
-
-    $categories = get_categories();
-    foreach ($categories as $key => $value) {
-        $response->getBody()->write("$value<br/>");
-    }
-
-    return $response;
-});
 $app->run();
-
 ?>
