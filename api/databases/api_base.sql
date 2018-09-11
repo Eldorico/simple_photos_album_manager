@@ -140,8 +140,10 @@ ALTER TABLE `Photo`
 --
 ALTER TABLE `User`
   MODIFY `id_user` int(11) NOT NULL AUTO_INCREMENT;
-  
-  
+
+-- dev modifs  
+ALTER TABLE `Photo` ADD `img_full_path` VARCHAR(200) NOT NULL AFTER `id_photo`;
+ALTER TABLE `Miniature` ADD `miniature_full_path` VARCHAR(200) NOT NULL AFTER `id_photo`;
 INSERT INTO `Category` (`id_category`, `name`) VALUES (NULL, 'Meute'), (NULL, 'Troupe'), (NULL, 'Groupe');
 INSERT INTO `Album` (`id_album`, `name`, `category`) VALUES (NULL, 'AlbumTest', 1);
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
