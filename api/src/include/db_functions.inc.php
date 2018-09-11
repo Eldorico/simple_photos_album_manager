@@ -13,6 +13,23 @@ function db_get_categories(){
         return array('categories' => $categories);
 }
 
+function db_album_exists_from_id($id_album){
+    global $db;
+    $id_album = intval($id_album);
+
+    $stmt = $db->prepare("SELECT * FROM Album WHERE id_album LIKE ?");
+    if( $stmt
+        && $stmt->bind_param('i', $id_album)
+        && $stmt->execute()){
+        $result = $stmt->get_result();
+        $album_allready_exists = ($result->num_rows == 1) ? true : false;
+    }else{
+        throw new Exception($db->error);
+    }
+
+    return $album_allready_exists;
+}
+
 function db_album_exists($albumName, $category){
     global $db;
 
