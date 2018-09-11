@@ -63,12 +63,12 @@ Class Routes {
         }
 
         // resize the file if needed
-
+        $final_img_path = resize_jpg($jpg_file, MAX_PIXELS_PER_IMAGE, IMG_FOLDER);
 
         // debug
         // var_dump($args);
         // $response->getBody()->write("album exists: ".db_album_exists_from_id($args['albumId'])."\n");
-        $response->getBody()->write($base_img_path);
+        $response->getBody()->write($final_img_path);
         return $response;
     }
 }
@@ -118,8 +118,31 @@ function convert_to_jpg($img_path, $dst_folder){
     return $converted_file_path;
 }
 
-function resize_jpg($src_img_path, $dst_img_path, $max_nb_pixels){
+/**
+* @return: the path (string) of the resized image.
+*           if an error occured: returns an array("error" => "err_msg");
+*/
+function resize_jpg($img_path, $max_nb_pixels, $dst_folder){
+    $img = new Imagick($img_path);
+    $src_width = $img->getImageWidth();
+    $src_height = $img->getImageHeight();
 
+    $ratio = floatval($src_width) / floatval($src_height);
+    $x = sqrt(floatval($max_nb_pixels) * $ratio);
+    $y = $x / $ratio;
+
+    $result = $img->adaptiveResizeImage(intval($x), intval($y), true);
+    if(!$result){
+        return array("error" => "couldn't resize the image");
+    }
+
+    $resized_file_path = $dst_folder . '/' . get_new_img_name("jpg");
+    $result = $img->writeImage($resized_file_path);
+    if(!$result){
+        return array("error" => "coulnd't save iamge after resizing it");
+    }
+
+    return $resized_file_path;
 }
 
 function get_new_img_name($extension){
