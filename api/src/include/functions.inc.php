@@ -62,8 +62,12 @@ Class Routes {
             return err_response($response, $jpg_file['error']['err_msg'], SERVER_ERROR_CODE);
         }
 
-        // resize the file if needed
+        // resize the file
         $final_img_path = resize_jpg($jpg_file, MAX_PIXELS_PER_IMAGE, IMG_FOLDER);
+        if(is_array($jpg_file) && array_key_exists('error' , $jpg_file)){
+            // TODO: remove uploaded image file AND resized file
+            return err_response($response, $jpg_file['error']['err_msg'], SERVER_ERROR_CODE);
+        }
 
         // debug
         // var_dump($args);
@@ -109,40 +113,50 @@ function get_current_timestamp(){
 *           if an errors occurs, returns an array("error" => "err_msg")
 */
 function convert_to_jpg($img_path, $dst_folder){
-    $img = new Imagick($img_path);
-    $converted_file_path = $dst_folder . '/' . get_new_img_name("jpg");
-    $result = $img->writeImage($converted_file_path);
-    if(!$result){
-        return array("error" => "coulnd't convert image to jpg");
+    try{
+        $img = new Imagick($img_path);
+        $converted_file_path = $dst_folder . '/' . get_new_img_name("jpg");
+        $result = $img->writeImage($converted_file_path);
+        if(!$result){
+            return array("error" => "coulnd't convert image to jpg");
+        }
+        return $converted_file_path;
+    }catch(Exception $e){
+        return array("error" => "Exception: coulnd't convert image to jpg" . $e->getMessage());
     }
-    return $converted_file_path;
+
 }
 
 /**
 * @return: the path (string) of the resized image.
 *           if an error occured: returns an array("error" => "err_msg");
+* // TODO: add the if needed
 */
 function resize_jpg($img_path, $max_nb_pixels, $dst_folder){
-    $img = new Imagick($img_path);
-    $src_width = $img->getImageWidth();
-    $src_height = $img->getImageHeight();
+    try{
+        $img = new Imagick($img_path);
+        $src_width = $img->getImageWidth();
+        $src_height = $img->getImageHeight();
 
-    $ratio = floatval($src_width) / floatval($src_height);
-    $x = sqrt(floatval($max_nb_pixels) * $ratio);
-    $y = $x / $ratio;
+        $ratio = floatval($src_width) / floatval($src_height);
+        $x = sqrt(floatval($max_nb_pixels) * $ratio);
+        $y = $x / $ratio;
 
-    $result = $img->adaptiveResizeImage(intval($x), intval($y), true);
-    if(!$result){
-        return array("error" => "couldn't resize the image");
+        $result = $img->adaptiveResizeImage(intval($x), intval($y), true);
+        if(!$result){
+            return array("error" => "couldn't resize the image");
+        }
+
+        $resized_file_path = $dst_folder . '/' . get_new_img_name("jpg");
+        $result = $img->writeImage($resized_file_path);
+        if(!$result){
+            return array("error" => "coulnd't save iamge after resizing it");
+        }
+
+        return $resized_file_path;
+    }catch(Exception $e){
+        return array("error" => "Exception: coulnd't resize image to jpg" . $e->getMessage());
     }
-
-    $resized_file_path = $dst_folder . '/' . get_new_img_name("jpg");
-    $result = $img->writeImage($resized_file_path);
-    if(!$result){
-        return array("error" => "coulnd't save iamge after resizing it");
-    }
-
-    return $resized_file_path;
 }
 
 function get_new_img_name($extension){
