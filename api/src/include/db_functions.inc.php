@@ -68,4 +68,34 @@ function db_create_album($albumName, $category){
     return $db->insert_id;
 }
 
+function db_add_img_to_album($img_path, $album_id){
+    global $db;
+
+    $stmt = $db->prepare("INSERT INTO Photo VALUES (null, ?, ?)");
+    if( $stmt
+        && $stmt->bind_param('si', $img_path, $album_id)
+        && $stmt->execute()){
+        $result = $stmt->get_result();
+    }else{
+        throw new Exception($db->error);
+    }
+
+    return $db->insert_id;
+}
+
+function db_link_miniature_to_img($miniature_path, $img_id){
+    global $db;
+
+    $stmt = $db->prepare("INSERT INTO Miniature VALUES (null, ?, ?)");
+    if( $stmt
+        && $stmt->bind_param('is', $img_id, $miniature_path)
+        && $stmt->execute()){
+        $result = $stmt->get_result();
+    }else{
+        throw new Exception($db->error);
+    }
+
+    return $db->insert_id;
+}
+
 ?>

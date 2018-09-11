@@ -58,21 +58,38 @@ Class Routes {
         // convert the file to jpg
         $jpg_file = convert_to_jpg($base_img_path, IMG_FOLDER);
         if(is_array($jpg_file) && array_key_exists('error' , $jpg_file)){
-            // TODO: remove uploaded image file
+            unlink($base_img_path);
             return err_response($response, $jpg_file['error']['err_msg'], SERVER_ERROR_CODE);
         }
 
         // resize the file
         $final_img_path = resize_jpg($jpg_file, MAX_PIXELS_PER_IMAGE, IMG_FOLDER);
-        if(is_array($jpg_file) && array_key_exists('error' , $jpg_file)){
-            // TODO: remove uploaded image file AND resized file
+        if(is_array($jpg_file) && array_key_exists('error' , $final_img_path)){
+            unlink($base_img_path);
+            unlink($final_img_path);
             return err_response($response, $jpg_file['error']['err_msg'], SERVER_ERROR_CODE);
         }
 
-        // debug
-        // var_dump($args);
-        // $response->getBody()->write("album exists: ".db_album_exists_from_id($args['albumId'])."\n");
-        $response->getBody()->write($final_img_path);
+        // create the miniature
+        $miniature_img_path = resize_jpg($jpg_file, MAX_PIXELS_PER_MINIATURE, MINIATURE_FOLDER);
+        if(is_array($jpg_file) && array_key_exists('error' , $miniature_img_path)){
+            unlink($base_img_path);
+            unlink($final_img_path);
+            return err_response($response, $jpg_file['error']['err_msg'], SERVER_ERROR_CODE);
+        }
+
+        // add the final image to the database
+        $img_db_id = db_add_img_to_album($final_img_path, $args['albumId']);
+
+        // add the final miniature to the database
+        $miniature_db_id = db_link_miniature_to_img($miniature_img_path, $img_db_id);
+
+        // remove the tmp files
+        unlink($base_img_path);
+        unlink($jpg_file);
+
+        // $response->getBody()->write("final_img_id : $img_db_id\n");
+        // $response->getBody()->write("final_miniature_id : $miniature_db_id\n");
         return $response;
     }
 }
