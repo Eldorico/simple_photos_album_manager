@@ -49,22 +49,26 @@ Class Routes {
             return err_response($response, "An error was encountered uploading the file", SERVER_ERROR_CODE);
         }
 
-        // debug
-        echo(IMG_FOLDER);
-
-        // save the file
+        // save the file in order to work with
         $extension = pathinfo($files['image']->getClientFilename(), PATHINFO_EXTENSION);
-        $final_img_name = strval(get_current_timestamp()) . '_' . generateRandomString(3) . ".$extension";
-        $files['image']->moveTo(IMG_FOLDER . "/$final_img_name");
-        // $files['image']['name'] = $final_img_name;
-        // var_dump($files['image']);
+        $base_img_name = get_new_img_name($extension);
+        $base_img_path = IMG_FOLDER . "/$base_img_name";
+        $files['image']->moveTo($base_img_path);
 
+        // convert the file to jpg
+        $jpg_file = convert_to_jpg($base_img_path, IMG_FOLDER);
+        if(is_array($jpg_file) && array_key_exists('error' , $jpg_file)){
+            // TODO: remove uploaded image file
+            return err_response($response, $jpg_file['error']['err_msg'], SERVER_ERROR_CODE);
+        }
+
+        // resize the file if needed
 
 
         // debug
         // var_dump($args);
         // $response->getBody()->write("album exists: ".db_album_exists_from_id($args['albumId'])."\n");
-        $response->getBody()->write($final_img_name);
+        $response->getBody()->write($base_img_path);
         return $response;
     }
 }
@@ -98,6 +102,28 @@ function expect_parameters(array $expected, array $parameters){
 function get_current_timestamp(){
     $date = new DateTime();
     return $date->getTimeStamp();
+}
+
+/**
+* @return:  returns the img path of the new jpg created. (another "unique" name)
+*           if an errors occurs, returns an array("error" => "err_msg")
+*/
+function convert_to_jpg($img_path, $dst_folder){
+    $img = new Imagick($img_path);
+    $converted_file_path = $dst_folder . '/' . get_new_img_name("jpg");
+    $result = $img->writeImage($converted_file_path);
+    if(!$result){
+        return array("error" => "coulnd't convert image to jpg");
+    }
+    return $converted_file_path;
+}
+
+function resize_jpg($src_img_path, $dst_img_path, $max_nb_pixels){
+
+}
+
+function get_new_img_name($extension){
+    return strval(get_current_timestamp()) . '_' . generateRandomString(NB_RANDOM_CHAR_IN_IMG_NAME) . ".$extension";
 }
 
 // https://stackoverflow.com/questions/4356289/php-random-string-generator

@@ -5,9 +5,8 @@ define('DB_USER', 'admin');
 define('DB_PASSWORD', 'admin');
 define('DB_HOST', '127.0.0.1');
 
-// echo(dirname(__FILE__)."\n");
-// echo(dirname(__FILE__) . '../img'."\n");
-// echo(realpath(dirname(__FILE__) . '/../img')."\n");
+define('MAX_PIXELS_PER_IMAGE', 1215000); // should ensure a jpg image below 1MB
+define('NB_RANDOM_CHAR_IN_IMG_NAME', 4);
 
 define('IMG_FOLDER', realpath(dirname(__FILE__) . '/../img'));
 define('MINIATURE_FOLDER', IMG_FOLDER . '/miniatures');

@@ -7,6 +7,9 @@ $ curl -i  http://localhost:8080/categories
 # create album 
 $ curl -X POST -i http://localhost:8080/albums --data '{"albumName" : "Album Test", "category" : "1"}' --header "Content-Type: application/json" 
 
+# upload image 
+$ curl -X POST http://localhost:8080/images/1 -F "image=@/home/eldorico/Bureau/2011 - Ecusson Choiseul - Grand.jpg"
+
 ```
 
 
