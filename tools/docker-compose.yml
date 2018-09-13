@@ -7,7 +7,7 @@ services: # containers. (we can have multiple containers)
         working_dir: /root/api_documentation
         volumes:
             - ../doc/api:/root/api_documentation
-        entrypoint: bash -c "while true; do sleep 500; done"
+        entrypoint: bash -c "aglio -i documentation.apib -o doc.html ; while true; do sleep 500; done"
     api-server:
         build:
             context: api_server

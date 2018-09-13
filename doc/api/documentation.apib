@@ -33,11 +33,14 @@ Description de la première doc API
     + imgToDelete (number, required) -  l'id de l'image à supprimer
 - Response 200 (application/json)
 
-### Get une image en particulier [GET /images/singleImage/{imageId}/{miniature}]
+### Get une image en particulier [GET /images/singleImage/{imageId}{?miniature}]
+Renvoie l'url de l'image demandée
 + Parameter
     + imageId (number, required) - l'id de l'image à charger
-    + miniature (boolean, required ) - si true, renvoie une miniature
+    + miniature (boolean, optional ) - si true, renvoie une miniature. Default : false
 - Response 200 (application/json)
+    + Attributes
+        + url (string)
 
 
 # Group Albums
