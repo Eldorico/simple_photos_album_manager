@@ -10,6 +10,8 @@ $ curl -X POST -i http://localhost:8080/albums --data '{"albumName" : "Album Tes
 # upload image 
 $ curl -X POST http://localhost:8080/images/1 -F "image=@/home/eldorico/Bureau/2011 - Ecusson Choiseul - Grand.jpg"
 
+# get img url 
+$ curl http://localhost:8080/images/singleImage/1?miniature=true 
 ```
 
 

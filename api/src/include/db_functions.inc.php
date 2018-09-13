@@ -98,4 +98,35 @@ function db_link_miniature_to_img($miniature_path, $img_id){
     return $db->insert_id;
 }
 
+/**
+* @description:
+* @param: $imgId
+* @param: $miniature (boolean) : if true, returns the path miniature version of img id.
+*         else the normal img path
+*/
+function db_get_img_path($imgId, $miniature){
+    global $db;
+
+    $table = $miniature ? 'Miniature' : 'Photo';
+
+    $stmt = $db->prepare("SELECT * FROM $table WHERE id_photo = ?");
+    if( $stmt
+        && $stmt->bind_param('i', $imgId)
+        && $stmt->execute()){
+        $result = $stmt->get_result();
+    }else{
+        throw new Exception($db->error);
+    }
+
+    if($result->num_rows == 0){
+        return array("error" => "imageId doesnt corresponds to an image");
+    }
+
+    if($miniature){
+        return $result->fetch_assoc()['miniature_full_path'];
+    }else{
+        return $result->fetch_assoc()['img_full_path'];
+    }
+}
+
 ?>

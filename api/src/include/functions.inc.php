@@ -72,7 +72,7 @@ Class Routes {
 
         // create the miniature
         $miniature_img_path = resize_jpg($jpg_file, MAX_PIXELS_PER_MINIATURE, MINIATURE_FOLDER);
-        if(is_array($jpg_file) && array_key_exists('error' , $miniature_img_path)){
+        if(is_array($miniature_img_path) && array_key_exists('error' , $miniature_img_path)){
             unlink($base_img_path);
             unlink($final_img_path);
             return err_response($response, $jpg_file['error']['err_msg'], SERVER_ERROR_CODE);
@@ -91,6 +91,22 @@ Class Routes {
         // $response->getBody()->write("final_img_id : $img_db_id\n");
         // $response->getBody()->write("final_miniature_id : $miniature_db_id\n");
         return $response;
+    }
+
+    static function get_img_url(Request $request, Response $response, array $args){
+        $miniature_param = isset($request->getQueryParams()['miniature']) ? boolval($request->getQueryParams()['miniature']) : false;
+        $db_result = db_get_img_path($args['imageId'], $miniature_param);
+        if(is_array($db_result) && array_key_exists('error' , $db_result)){
+            return err_response($response, $db_result['error'], BAD_REQUEST_CODE);
+        }
+
+        $rel_path = str_replace($request->getServerParam('DOCUMENT_ROOT', 'error'), '', $db_result);
+        $rel_path = ltrim($rel_path, '/');
+        $img_url = $request->getServerParam('REQUEST_SCHEME', 'error') . '://' . $request->getServerParam('HTTP_HOST', 'error') . "/$rel_path" ;
+
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->write(str_replace('\\', '', json_encode(array('url' => $img_url))));
     }
 }
 
@@ -147,7 +163,7 @@ function convert_to_jpg($img_path, $dst_folder){
 /**
 * @return: the path (string) of the resized image.
 *           if an error occured: returns an array("error" => "err_msg");
-* // TODO: add the if needed
+* // TODO: add the if needed (if we need to resize the image)
 */
 function resize_jpg($img_path, $max_nb_pixels, $dst_folder){
     try{

@@ -13,6 +13,7 @@ $app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);
 $app->get('/categories', 'Routes::get_categories');
 $app->post('/albums', 'Routes::create_album');
 $app->post('/images/{albumId}', 'Routes::upload_image');
+$app->get('/images/singleImage/{imageId}', 'Routes::get_img_url');
 
 $app->run();
 ?>
