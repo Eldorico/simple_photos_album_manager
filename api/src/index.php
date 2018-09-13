@@ -11,9 +11,11 @@ require_once('include/functions.inc.php');
 $app = new \Slim\App(['settings' => ['displayErrorDetails' => true]]);
 
 $app->get('/categories', 'Routes::get_categories');
+$app->get('/albums', 'Routes::get_albums');
 $app->post('/albums', 'Routes::create_album');
-$app->post('/images/{albumId}', 'Routes::upload_image');
 $app->get('/images/singleImage/{imageId}', 'Routes::get_img_url');
+$app->post('/images/{albumId}', 'Routes::upload_image');
+
 
 $app->run();
 ?>

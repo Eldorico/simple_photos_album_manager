@@ -12,11 +12,20 @@ $ curl -X POST http://localhost:8080/images/1 -F "image=@/home/eldorico/Bureau/2
 
 # get img url 
 $ curl http://localhost:8080/images/singleImage/1?miniature=true 
+
+# get album infos
+$ curl http://localhost:8080/albums?category=1 -s
 ```
 
 
 
 #### Commandes utiles
+
+curl et jq : afficher au format JSON
+
+```bash
+$ curl http://localhost:8080/albums -s | jq .
+```
 
 Docker
 

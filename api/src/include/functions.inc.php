@@ -17,6 +17,45 @@ Class Routes {
             ->write($json_categories);
     }
 
+    static function get_albums(Request $request, Response $response, array $args){
+        $category_id = isset($request->getQueryParams()['category']) ? $request->getQueryParams()['category'] : false;
+        if($category_id != false && !db_category_exists($category_id)){
+            return err_response($response, "category doesnt exists", FORBIDDEN_CODE);
+        }
+
+        $categories_wanted = array();
+        if($category_id == false){
+            $categories_rows = db_get_categories();
+            foreach ($categories_rows['categories'] as $key => $value) {
+                $categories_wanted[] = $value['id'];
+            }
+        }else{
+            $categories_wanted[] = $category_id;
+        }
+
+        $data_to_return = array();
+        foreach ($categories_wanted as $key => $cat_id) {
+            $albums_info = db_get_albums_info($cat_id);
+            if(count($albums_info) != 0){
+                foreach ($albums_info as $key => $album_info) {
+                    $album_to_return = array();
+                    $album_to_return['photos'] = array();
+                    foreach ($album_info['photos'] as $key => $id_photo) {
+                        $album_to_return['photos'][] = array("photoId" => $id_photo);
+                    }
+                    $album_to_return['category'] = $album_info['category'];
+                    $album_to_return['albumName'] = $album_info['name'];
+                    $album_to_return['id'] = $album_info['id_album'];
+                    $data_to_return[] = $album_to_return;
+                }
+            }
+        }
+
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->write(json_encode(array('albums' => $data_to_return)));
+    }
+
     static function create_album(Request $request, Response $response, array $args){
         $params = $request->getParsedBody();
 

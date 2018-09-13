@@ -66,9 +66,9 @@ Renvoie l'url de l'image demandée
     + albumToDelete (number, required) -  l'id de l'album à supprimer
 - Response 200 (application/json)
 
-### Get la liste de tous les albums [GET /albums/{category}]
+### Get la liste de tous les albums [GET /albums{?category}]
 + Parameters
-    + category (number, optional) - 1 : meute, 2: troupe, 3: groupe
+    + category (number, optional) - 1 : meute, 2: troupe, 3: groupe. If not given, returns all albums. If category doesnt exists, returns an error.
 - Response 200 (application/json)
     + Attributes
         + albums (array[Album])
@@ -76,6 +76,7 @@ Renvoie l'url de l'image demandée
 ## Data Structures
 
 ### Album
++ id (number) - l'id de l'album
 + albumName (string) - le nom de l'album
 + category (number) - l'id de la catégorie de l'album
 + photos (array[Photo])
