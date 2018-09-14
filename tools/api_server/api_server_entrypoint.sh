@@ -1,7 +1,8 @@
 # --------------------------------------------------------------
 # choose database to import here (db files are in api/databases)
 # --------------------------------------------------------------
-DB_FILENAME_TO_IMPORT=api_base.sql
+# DB_FILENAME_TO_IMPORT=api_base.sql
+DB_FILENAME_TO_IMPORT=app_webapp_test1.sql
 
 # --------------------------------------------------------------
 # leave the rest unchanged for dev
