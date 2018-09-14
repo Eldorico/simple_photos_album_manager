@@ -13,7 +13,7 @@ services: # containers. (we can have multiple containers)
             context: api_server
             dockerfile: 'php_mysql_server.dockerfile'
         ports:
-            - "8080:80"
+            - "80:80"
         volumes:
             - ../api/src:/var/www/html
             - ../api/databases:/var/databases
@@ -23,7 +23,7 @@ services: # containers. (we can have multiple containers)
             context: .
             dockerfile: 'webapp.dockerfile'
         ports:
-            - "8090:8080"
+            - "8080:8080"
         volumes:
             - ../webapp:/var/web-app
         working_dir: /var/web-app

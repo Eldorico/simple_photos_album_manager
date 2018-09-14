@@ -2,19 +2,19 @@
 
 ```bash
 # get categories 
-$ curl -i  http://localhost:8080/categories
+$ curl -i  http://localhost/categories
 
 # create album 
-$ curl -X POST -i http://localhost:8080/albums --data '{"albumName" : "Album Test", "category" : "1"}' --header "Content-Type: application/json" 
+$ curl -X POST -i http://localhost/albums --data '{"albumName" : "Album Test", "category" : "1"}' --header "Content-Type: application/json" 
 
 # upload image 
-$ curl -X POST http://localhost:8080/images/1 -F "image=@/home/eldorico/Bureau/2011 - Ecusson Choiseul - Grand.jpg"
+$ curl -X POST http://localhost/images/1 -F "image=@/home/eldorico/Bureau/2011 - Ecusson Choiseul - Grand.jpg"
 
 # get img url 
-$ curl http://localhost:8080/images/singleImage/1?miniature=true 
+$ curl http://localhost/images/singleImage/1?miniature=true 
 
 # get album infos
-$ curl http://localhost:8080/albums?category=1 -s
+$ curl http://localhost/albums?category=1 -s
 ```
 
 
@@ -24,7 +24,7 @@ $ curl http://localhost:8080/albums?category=1 -s
 curl et jq : afficher au format JSON
 
 ```bash
-$ curl http://localhost:8080/albums -s | jq .
+$ curl http://localhost/albums -s | jq .
 ```
 
 Docker
