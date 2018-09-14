@@ -1,7 +1,7 @@
-import PageAlbums from './PageAlbums.vue';
-import PageAlbum from './PageAlbum.vue';
+import PageAlbumsList from './PageAlbumsList.vue';
+import PageAlbumView from './PageAlbumView.vue';
 
 export const routes = [
-  {path: '', component:  PageAlbums},
-  {path: '/album', component:  PageAlbum},
+  {path: '', component:  PageAlbumsList},
+  {path: '/album', component:  PageAlbumView},
 ];

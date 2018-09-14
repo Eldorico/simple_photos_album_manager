@@ -1,6 +1,7 @@
 <template>
 <div>
-    PAGE ALBUM
+    PAGE ALBUM VIEW
+    <a><router-link to="/">go to albums list</router-link></a>
 </div>
 </template>
 
