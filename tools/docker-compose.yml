@@ -18,3 +18,13 @@ services: # containers. (we can have multiple containers)
             - ../api/src:/var/www/html
             - ../api/databases:/var/databases
         entrypoint: bash /api_server_entrypoint.sh
+    web-app-server:
+        build:
+            context: .
+            dockerfile: 'webapp.dockerfile'
+        ports:
+            - "8090:8080"
+        volumes:
+            - ../webapp:/var/web-app
+        working_dir: /var/web-app
+        entrypoint: bash -c "npm install && npm run dev"
