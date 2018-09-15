@@ -27,4 +27,4 @@ services: # containers. (we can have multiple containers)
         volumes:
             - ../webapp:/var/web-app
         working_dir: /var/web-app
-        entrypoint: bash -c "npm install && npm run dev"
+        entrypoint: bash -c "npm install && chmod 777 -R *  && npm run dev"
