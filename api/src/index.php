@@ -17,5 +17,20 @@ $app->get('/images/singleImage/{imageId}', 'Routes::get_img_url');
 $app->post('/images/{albumId}', 'Routes::upload_image');
 
 
+// CORS rules for developpement
+// TODO: remove this (or update it) for production!
+$app->options('/{routes:.+}', function ($request, $response, $args) {
+    return $response;
+});
+$app->add(function ($req, $res, $next) {
+    $response = $next($req, $res);
+    return $response
+            ->withHeader('Access-Control-Allow-Origin', '*')
+            ->withHeader('Access-Control-Allow-Headers', 'X-Requested-With, Content-Type, Accept, Origin, Authorization')
+            ->withHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+});
+
+
+
 $app->run();
 ?>
