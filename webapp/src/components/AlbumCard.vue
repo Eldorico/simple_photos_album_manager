@@ -1,7 +1,10 @@
 <template>
-  <div>
+  <div class="album-card">
       <img :src="this.minURL">
-      <div>{{this.input['albumName']}}</div>
+      <div>
+          <span class="album-title">{{this.input['albumName']}}</span>
+          <img class="edit-logo" src="src/assets/pen.svg"></img>
+      </div>
   </div>
 </template>
 
@@ -47,3 +50,46 @@ export default {
     }
 }
 </script>
+
+<style>
+    .album-card{
+        cursor: pointer;
+        border-style: solid;
+        min-width: 25%;
+        background-color: white;
+        text-decoration: none;
+        border-color: #f7f7f7;
+    }
+
+    .album-title{
+        font-size: 25px;
+        color: #315e33;
+        margin-right: 3%;
+    }
+
+    .edit-logo{
+        height: 15px;
+    }
+
+@media (max-width: 1000px){
+    img{
+        width: 100%;
+    }
+
+    .album-title{
+        font-size: 80px;
+        margin-right: 7%;
+    }
+
+    .edit-logo{
+        height: 60px;
+        width: 60px;
+    }
+
+    .album-card{
+        min-width: 85%;
+        font-size: 80px;
+        margin: 3% 20%;
+    }
+}
+</style>

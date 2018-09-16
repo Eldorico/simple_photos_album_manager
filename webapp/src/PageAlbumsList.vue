@@ -1,13 +1,16 @@
 <template>
 <div>
     <div class="header">
-    <categories-list :input="createCategoriesChoice()"
-                     :defaultSelection="this.defaultCategorySelection">
-                      </categories-list>
-    <album-card v-for="album in getChoosenAlbums()"  :input="album">
-        </album-card>
-    <a><router-link to="/album">go to album view</router-link></a>
+        <categories-list :input="createCategoriesChoice()"
+                         :defaultSelection="this.defaultCategorySelection">
+                          </categories-list>
     </div>
+    <div class="page-content">
+        <album-card v-for="album in getChoosenAlbums()"  :input="album">
+            </album-card>
+        <a><router-link to="/album">go to album view</router-link></a>
+    </div>
+
 </div>
 </template>
 
@@ -49,12 +52,36 @@ export default{
     width: 100%;
     height: 40px;
     line-height: 40px;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+}
+
+.page-content{
+    margin-top: 50px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: flex-end;
+    text-align: center;
+}
+
+body{
+    background-color: #fbfbfb;
 }
 
 @media (max-width: 1000px){
     .header{
         height: 120px;
         line-height: 120px;
+    }
+
+    .page-content{
+        margin-top: 130px;
+    }
+
+    body{
+        background-color: #f6f6f6;
     }
 }
 </style>
