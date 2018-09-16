@@ -2,11 +2,13 @@
 <div>
     <div class="header">
         <categories-list :input="createCategoriesChoice()"
-                         :defaultSelection="this.defaultCategorySelection">
+                         :defaultSelection="this.defaultCategorySelection"
+                         v-on:category-selected="filterAlbums">
                           </categories-list>
     </div>
     <div class="page-content">
-        <album-card v-for="album in getChoosenAlbums()"  :input="album">
+        <album-card v-for="album in this.displayedAlbums"
+                    :input="album">
             </album-card>
         <a><router-link to="/album">go to album view</router-link></a>
     </div>
@@ -23,7 +25,8 @@ export default{
     data : function(){
         return {
             dataService : Data,
-            defaultCategorySelection : 0
+            defaultCategorySelection : 0,
+            displayedAlbums : []
         }
     },
     components : {
@@ -38,11 +41,18 @@ export default{
             }
             return catToReturn;
         },
-        getChoosenAlbums : function(){
-            console.log("PageAlbumsList.getChoosenAlbums() : allAlbums = ");
-            console.log(this.dataService.allAlbums);
-            return this.dataService.allAlbums;
+        filterAlbums : function(idCategory){
+            if(idCategory == 0){
+                this.displayedAlbums = this.dataService.allAlbums;
+            }else{
+                this.displayedAlbums = this.dataService.albumsSortedByCategory[idCategory];
+            }
+            console.log("Albums displayed: ");
+            console.log(this.displayedAlbums);
         }
+    },
+    mounted : function(){
+        this.filterAlbums(this.defaultCategorySelection);
     }
 }
 </script>

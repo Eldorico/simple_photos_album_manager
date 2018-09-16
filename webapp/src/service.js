@@ -39,10 +39,6 @@ export default data = {
                   this.albumsSortedByCategory[data['albums'][i]['category']].push(data['albums'][i]);
                   this.albumsSortedById[data['albums'][i]['id']] = data['albums'][i];
               }
-
-              // debug
-            //   console.log("tous les albums:");
-            //   console.log(this.allAlbums);
           });
     },
     getAlbum : function(albumId){
@@ -71,7 +67,6 @@ export default data = {
         }
 
         // add the miniature album url
-        // console.log("getAlbumMiniatureUrl("+idAlbum+") : will check for miniature URL");
         Vue.http.get('images/singleImage/'+album['photos'][0]['photoId']+'?miniature=true')
             .then(response =>{ return response.json(); })
             .then(data =>{
@@ -85,7 +80,6 @@ export default data = {
     },
     addAlbumMiniatureUrl : function(idAlbum, url){
         this.albumsSortedById[idAlbum]['miniatureURL'] = url; // TODO: check if this adds in all albums list!
-        // console.log("service.addAlbumMiniatureUrl("+idAlbum+", "+url+"): added url : "+this.albumsSortedById[idAlbum]['miniatureURL']+".");
         EventBus.$emit('albumMiniatureUrlChanged', idAlbum);
     }
 }

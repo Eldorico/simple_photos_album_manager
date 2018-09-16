@@ -22,6 +22,7 @@ export default {
   methods : {
       select : function(id){
           this.catSelected = id;
+          this.$emit('category-selected', id);
       }
   },
 }

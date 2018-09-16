@@ -1,6 +1,6 @@
 <template>
   <div class="album-card">
-      <img :src="this.minURL">
+      <img class="album-miniature" :src="this.minURL">
       <div>
           <span class="album-title">{{this.input['albumName']}}</span>
           <img class="edit-logo" src="src/assets/pen.svg"></img>
@@ -26,7 +26,6 @@ export default {
         },
         refreshMinURL : function(url){
             this.minURL = url;
-            console.log("AlbumCard.refresehMinURL() : new min url for albuml "+this.input['id']+" = "+url);
         }
     },
     mounted : function(){
@@ -39,14 +38,14 @@ export default {
         var card = this;
         var albumInput = this.input;
         EventBus.$on('albumMiniatureUrlChanged', function(idAlbum){
-            // console.log("WESH MECCCCC BORDLE DE Q*");
-            // console.log(albumInput);
             if(albumInput.id == idAlbum){
                 url = data.getAlbum(idAlbum)['miniatureURL'];
-                // console.log("AlbumCard: EventBus: albumMiniatureUrlChanged new URL for album "+idAlbum+" : "+ url);
                 card.refreshMinURL(url);
             }
         });
+    },
+    updated : function(){
+        this.minURL = this.getMinURL();
     }
 }
 </script>
@@ -72,8 +71,9 @@ export default {
     }
 
 @media (max-width: 1000px){
-    img{
-        width: 100%;
+    .album-miniature{
+        height: 400px;
+        width: auto;
     }
 
     .album-title{
