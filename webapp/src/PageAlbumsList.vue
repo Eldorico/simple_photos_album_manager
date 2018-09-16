@@ -2,9 +2,10 @@
 <div>
     <div class="header">
     <categories-list :input="createCategoriesChoice()"
-                     :defaultSelection="0">
+                     :defaultSelection="this.defaultCategorySelection">
                       </categories-list>
-    PAGE ALBUMS LIST
+    <album-card v-for="album in getChoosenAlbums()"  :input="album">
+        </album-card>
     <a><router-link to="/album">go to album view</router-link></a>
     </div>
 </div>
@@ -13,15 +14,18 @@
 <script>
 import CategoriesList from './components/CategoriesList.vue';
 import Data from './service.js';
+import AlbumCard from './components/AlbumCard.vue';
 
 export default{
     data : function(){
         return {
             dataService : Data,
+            defaultCategorySelection : 0
         }
     },
     components : {
-        'categories-list' : CategoriesList
+        'categories-list' : CategoriesList,
+        'album-card' : AlbumCard
     },
     methods : {
         createCategoriesChoice : function(){
@@ -30,6 +34,11 @@ export default{
                 catToReturn.push(this.dataService.categories[i]);
             }
             return catToReturn;
+        },
+        getChoosenAlbums : function(){
+            console.log("PageAlbumsList.getChoosenAlbums() : allAlbums = ");
+            console.log(this.dataService.allAlbums);
+            return this.dataService.allAlbums;
         }
     }
 }

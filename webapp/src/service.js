@@ -1,5 +1,6 @@
 
 import Vue from 'vue';
+import  { EventBus } from './EventBus.js';
 
 let data;
 export default data = {
@@ -40,8 +41,8 @@ export default data = {
               }
 
               // debug
-              console.log("tous les albums:");
-              console.log(this.allAlbums);
+            //   console.log("tous les albums:");
+            //   console.log(this.allAlbums);
           });
     },
     getAlbum : function(albumId){
@@ -55,11 +56,12 @@ export default data = {
         var album = this.getAlbum(idAlbum);
         if(album == -1){
             console.err("getAlbumMiniatureUrl("+idAlbum+") : album doesnt exists");
+            console.log("getAlbumMiniatureUrl("+idAlbum+") : album doesnt exists");
             return;
         }
 
         // if there is allready a miniature in album, return the miniature.
-        if('miniatureURL' in album && album['miniatureURL'] != 'NO_PHOTO_ERROR' || album['miniatureURL'] != 'WAITING_FOR_MINIATURE'){
+        if('miniatureURL' in album && album['miniatureURL'] != 'NO_PHOTO_ERROR' && album['miniatureURL'] != 'WAITING_FOR_MINIATURE'){
             return album['miniatureURL'];
         }
         // if there is no photo in album, add "NO_PHOTO_ERROR" in album miniature and return
@@ -69,7 +71,8 @@ export default data = {
         }
 
         // add the miniature album url
-        Vue.http.get('images/singleImage/'+album['photos']['photoId']+'?miniature=true')
+        // console.log("getAlbumMiniatureUrl("+idAlbum+") : will check for miniature URL");
+        Vue.http.get('images/singleImage/'+album['photos'][0]['photoId']+'?miniature=true')
             .then(response =>{ return response.json(); })
             .then(data =>{
                 this.addAlbumMiniatureUrl(idAlbum, data['url']);
@@ -82,5 +85,7 @@ export default data = {
     },
     addAlbumMiniatureUrl : function(idAlbum, url){
         this.albumsSortedById[idAlbum]['miniatureURL'] = url; // TODO: check if this adds in all albums list!
+        // console.log("service.addAlbumMiniatureUrl("+idAlbum+", "+url+"): added url : "+this.albumsSortedById[idAlbum]['miniatureURL']+".");
+        EventBus.$emit('albumMiniatureUrlChanged', idAlbum);
     }
 }

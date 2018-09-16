@@ -22,7 +22,6 @@ export default {
   methods : {
       select : function(id){
           this.catSelected = id;
-          console.log("selected "+id);
       }
   },
 }

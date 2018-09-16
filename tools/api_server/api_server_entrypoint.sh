@@ -3,6 +3,7 @@
 # --------------------------------------------------------------
 # DB_FILENAME_TO_IMPORT=api_base.sql
 DB_FILENAME_TO_IMPORT=app_webapp_test1.sql
+# DB_FILENAME_TO_IMPORT=app_webapp_test2.sql
 
 # --------------------------------------------------------------
 # leave the rest unchanged for dev
