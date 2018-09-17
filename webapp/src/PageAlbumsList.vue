@@ -11,7 +11,6 @@
                     :input="album"
                     v-on:clicked-show-album="goToAlbum">
         </album-card>
-        <a><router-link to="/album">go to album view</router-link></a>
     </div>
 
 </div>
@@ -74,7 +73,7 @@ export default{
 }
 </script>
 
-<style>
+<style scoped>
 .header{
     width: 100%;
     height: 40px;

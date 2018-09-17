@@ -56,7 +56,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
     .album-card{
         border-style: solid;
         min-width: 25%;

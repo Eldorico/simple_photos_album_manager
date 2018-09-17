@@ -21,6 +21,7 @@ export default data = {
         });
     },
     getAllAlbumsInfo : function(){
+        var eventBus = EventBus;
         Vue.http.get('albums')
           .then(response =>{ return response.json(); })
           .then(data =>{
@@ -39,7 +40,11 @@ export default data = {
                   this.allAlbums.push(data['albums'][i]);
                   this.albumsSortedByCategory[data['albums'][i]['category']].push(data['albums'][i]);
                   this.albumsSortedById[data['albums'][i]['id']] = data['albums'][i];
+
+                  // emit album info changed
+                  eventBus.$emit('albumInfosChanged', data['albums'][i]['id']);
               }
+
           });
     },
     getAlbum : function(albumId){
