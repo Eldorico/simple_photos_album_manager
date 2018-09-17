@@ -8,6 +8,7 @@ export default data = {
     albumsSortedByCategory : {},
     allAlbums : [],
     albumsSortedById : {},
+    photosSortedById : {},
     getCategories : function() {
         Vue.http.get('categories')
           .then(response =>{ return response.json(); })
@@ -26,7 +27,7 @@ export default data = {
               // sort albums by name
               data['albums'].sort(function(el1, el2){
                   if(el1.albumName < el2.albumName) return -1;
-                  if(el2.albumName > el2.albumName) return 1;
+                  if(el1.albumName > el2.albumName) return 1;
                   return 0;
               });
 
@@ -51,8 +52,7 @@ export default data = {
     getAlbumMiniatureUrl : function(idAlbum){
         var album = this.getAlbum(idAlbum);
         if(album == -1){
-            console.err("getAlbumMiniatureUrl("+idAlbum+") : album doesnt exists");
-            console.log("getAlbumMiniatureUrl("+idAlbum+") : album doesnt exists");
+            console.error("getAlbumMiniatureUrl("+idAlbum+") : album doesnt exists");
             return;
         }
 
@@ -81,5 +81,39 @@ export default data = {
     addAlbumMiniatureUrl : function(idAlbum, url){
         this.albumsSortedById[idAlbum]['miniatureURL'] = url; // TODO: check if this adds in all albums list!
         EventBus.$emit('albumMiniatureUrlChanged', idAlbum);
+    },
+    getPhotoUrl : function(photoId, miniature){
+        // if there is allready an url for this photo, return the url. If waiting for URL, return WAITING_FOR_URL
+        if(miniature && photoId in this.photosSortedById && 'miniatureUrl' in this.photosSortedById[photoId]){
+            if(this.photosSortedById['miniatureUrl'] == 'WAITING_FOR_URL'){
+                return 'WAITING_FOR_URL';
+            }else{
+                return this.photosSortedById[photoId]['miniatureUrl'];
+            }
+        }
+        if(!miniature && photoId in this.photosSortedById && 'normalUrl' in this.photosSortedById[photoId]){
+            if(this.photosSortedById['normalUrl'] == 'WAITING_FOR_URL'){
+                return 'WAITING_FOR_URL';
+            }else{
+                return this.photosSortedById[photoId]['normalUrl'];
+            }
+        }
+
+        // getting here should mean that we haven't tried to get the url. so get it:
+        Vue.http.get('images/singleImage/'+imageId+'?miniature='+miniature)
+            .then(response =>{ return response.json(); })
+            .then(data =>{
+                this.addPhotoUrl(photoId, miniature, data['url']);
+        });
+
+    },
+    addPhotoUrl : function(photoId, miniature, url){
+        if(miniature){
+            this.photosSortedById[photoId]['miniatureUrl'] = url;
+            EventBus.$emit('photoMiniatureUrlChanged', photoId);
+        }else{
+            this.photosSortedById[photoId]['normalUrl'] = url;
+            EventBus.$emit('photoNormalUrlChanged', photoId);
+        }
     }
 }

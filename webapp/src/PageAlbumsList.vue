@@ -8,8 +8,9 @@
     </div>
     <div class="page-content">
         <album-card v-for="album in this.displayedAlbums"
-                    :input="album">
-            </album-card>
+                    :input="album"
+                    v-on:clicked-show-album="goToAlbum">
+        </album-card>
         <a><router-link to="/album">go to album view</router-link></a>
     </div>
 
@@ -26,9 +27,11 @@ export default{
         return {
             dataService : Data,
             defaultCategorySelection : 0,
-            displayedAlbums : []
+            displayedAlbums : [],
+            selectedCategory : this.defaultCategorySelection
         }
     },
+    props : ['categoryId'],
     components : {
         'categories-list' : CategoriesList,
         'album-card' : AlbumCard
@@ -42,14 +45,28 @@ export default{
             return catToReturn;
         },
         filterAlbums : function(idCategory){
+            this.selectedCategory = idCategory;
             if(idCategory == 0){
                 this.displayedAlbums = this.dataService.allAlbums;
             }else{
                 this.displayedAlbums = this.dataService.albumsSortedByCategory[idCategory];
             }
-            console.log("Albums displayed: ");
-            console.log(this.displayedAlbums);
+        },
+        goToAlbum : function(idAlbum){
+            console.log("Will go to album "+idAlbum+" with referer "+this.selectedCategory);
+            this.$router.push('/album/'+idAlbum+'/'+this.selectedCategory);
         }
+    },
+    beforeMount : function(){
+        if(typeof this.categoryId !== 'undefined'){
+            this.defaultCategorySelection = this.categoryId;
+            this.filterAlbums(this.defaultCategorySelection);
+        }else{
+            this.defaultCategorySelection = 0;
+            this.filterAlbums(this.defaultCategorySelection);
+        }
+        // console.log("PageAlbumList : updated. Category = ");
+        // console.log(this.categoryId);
     },
     mounted : function(){
         this.filterAlbums(this.defaultCategorySelection);

@@ -1,9 +1,9 @@
 <template>
   <div class="album-card">
-      <img class="album-miniature" :src="this.minURL">
+      <img class="album-miniature clickable" :src="this.minURL" @click="clickedShowAlbum">
       <div>
-          <span class="album-title">{{this.input['albumName']}}</span>
-          <img class="edit-logo" src="src/assets/pen.svg"></img>
+          <span class="album-title clickable" @click="clickedShowAlbum">{{this.input['albumName']}}</span>
+          <img class="edit-logo clickable" src="src/assets/pen.svg" @click="clickedEditAlbum"></img>
       </div>
   </div>
 </template>
@@ -26,6 +26,12 @@ export default {
         },
         refreshMinURL : function(url){
             this.minURL = url;
+        },
+        clickedShowAlbum : function(){
+            this.$emit('clicked-show-album', this.input['id']);
+        },
+        clickedEditAlbum : function(){
+            console.log("cliqued on edit album: "+this.input['id']);
         }
     },
     mounted : function(){
@@ -52,7 +58,6 @@ export default {
 
 <style>
     .album-card{
-        cursor: pointer;
         border-style: solid;
         min-width: 25%;
         background-color: white;
