@@ -168,4 +168,25 @@ function db_get_img_path($imgId, $miniature){
     }
 }
 
+function db_get_all_urls_from_album($albumId){
+    global $db;
+
+    $stmt = $db->prepare("  SELECT Photo.img_full_path, Photo.id_photo, Miniature.miniature_full_path FROM Photo
+                            JOIN Miniature on Photo.id_photo = Miniature.id_photo
+                            WHERE Photo.id_album = ?");
+    if( $stmt
+        && $stmt->bind_param('i', $albumId)
+        && $stmt->execute()){
+        $result = $stmt->get_result();
+    }else{
+        throw new Exception($db->error);
+    }
+
+    $to_return = array();
+    while($row = $result->fetch_assoc()){
+        $to_return[] = $row;
+    }
+    return $to_return;
+}
+
 ?>

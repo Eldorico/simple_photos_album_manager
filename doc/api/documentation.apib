@@ -42,7 +42,13 @@ Renvoie l'url de l'image demandée
     + Attributes
         + url (string)
 
-
+### Get toutes les images d'un album [GET /images/urls/{albumId}]
+Renvoie les urls de toutes les images d'un album
++ Parameter
+    + albumId (number, required) - l'id de l'album en question
+- Response 200 (application/json)
+    + Attributes
+        + urls (array[PhotoUrls])
 # Group Albums
 
 ### Créer un album [POST /albums]
@@ -87,3 +93,8 @@ Renvoie l'url de l'image demandée
 ### Category
 + id (number) - l'id de la categorie
 + name (string) - le nom de la catégorie
+
+### PhotoUrls
++ photoId (number) - l'id de la photo
++ imgUrl (string) - l'url de la grande image
++ miniatureUrl (string) - l'url de la miniature

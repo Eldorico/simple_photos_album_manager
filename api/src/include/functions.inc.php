@@ -139,14 +139,50 @@ Class Routes {
             return err_response($response, $db_result['error'], BAD_REQUEST_CODE);
         }
 
-        $rel_path = str_replace($request->getServerParam('DOCUMENT_ROOT', 'error'), '', $db_result);
-        $rel_path = ltrim($rel_path, '/');
-        $img_url = $request->getServerParam('REQUEST_SCHEME', 'error') . '://' . $request->getServerParam('HTTP_HOST', 'error') . "/$rel_path" ;
+        $img_url = full_path_to_url($db_result, doc_root($request), api_host($request), request_sheme($request));
 
         return $response
             ->withHeader('Content-Type', 'application/json')
             ->write(str_replace('\\', '', json_encode(array('url' => $img_url))));
     }
+
+    static function get_all_urls_from_album(Request $request, Response $response, array $args){
+        if(!db_album_exists_from_id($args['albumId'])){
+            return err_response($response, "Album doesnt exists", FORBIDDEN_CODE);
+        }
+
+        $imgs_paths = db_get_all_urls_from_album($args['albumId']);
+        $urls = array();
+        foreach ($imgs_paths as $key => $db_row) {
+            $photo_id = $db_row['id_photo'];
+            $img_url = full_path_to_url($db_row['img_full_path'], doc_root($request), api_host($request), request_sheme($request));
+            $min_url = full_path_to_url($db_row['miniature_full_path'], doc_root($request), api_host($request), request_sheme($request));
+            $urls[] = array('photoId' => $photo_id, 'imgUrl' => $img_url, 'miniatureUrl' => $min_url);
+        }
+
+        return $response
+            ->withHeader('Content-Type', 'application/json')
+            ->write(json_encode(array('urls' => $urls)));
+    }
+}
+
+function doc_root($request){
+    return $request->getServerParam('DOCUMENT_ROOT', 'error');
+}
+
+function api_host($request){
+    return $request->getServerParam('HTTP_HOST', 'error');
+}
+
+function request_sheme($request){
+    return $request->getServerParam('REQUEST_SCHEME', 'error');
+}
+
+function full_path_to_url($fullpath, $doc_root, $api_host, $request_sheme){
+    $rel_path = str_replace($doc_root, '', $fullpath);
+    $rel_path = ltrim($rel_path, '/');
+    $img_url = $request_sheme . '://' . $api_host . "/$rel_path" ;
+    return $img_url;
 }
 
 function err_response(Response $response, $err_msg, $status_code){

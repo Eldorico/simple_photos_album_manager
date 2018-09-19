@@ -14,6 +14,7 @@ $app->get('/categories', 'Routes::get_categories');
 $app->get('/albums', 'Routes::get_albums');
 $app->post('/albums', 'Routes::create_album');
 $app->get('/images/singleImage/{imageId}', 'Routes::get_img_url');
+$app->get('/images/urls/{albumId}', 'Routes::get_all_urls_from_album');
 $app->post('/images/{albumId}', 'Routes::upload_image');
 
 

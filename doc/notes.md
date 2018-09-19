@@ -15,6 +15,9 @@ $ curl http://localhost/images/singleImage/1?miniature=true
 
 # get album infos
 $ curl http://localhost/albums?category=1 -s
+
+# get all images url from album 
+$ curl http://localhost/images/urls/1
 ```
 
 
