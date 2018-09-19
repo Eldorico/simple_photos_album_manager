@@ -9,6 +9,8 @@ export default data = {
     allAlbums : [],
     albumsSortedById : {},
     photosSortedById : {},
+    allAlbumsPhotosUrls : {},
+
     getCategories : function() {
         Vue.http.get('categories')
           .then(response =>{ return response.json(); })
@@ -37,9 +39,11 @@ export default data = {
                   this.albumsSortedByCategory[this.categories[i]['id']] = [];
               }
               for(var i=0; i<data['albums'].length; i++){
-                  this.allAlbums.push(data['albums'][i]);
-                  this.albumsSortedByCategory[data['albums'][i]['category']].push(data['albums'][i]);
-                  this.albumsSortedById[data['albums'][i]['id']] = data['albums'][i];
+                  var album = data['albums'][i];
+                  this.allAlbums.push(album);
+                  this.albumsSortedByCategory[album['category']].push(album);
+                  this.albumsSortedById[album['id']] = album;
+                  this.allAlbumsPhotosUrls[album['id']] = [];
 
                   // emit album info changed
                   eventBus.$emit('albumInfosChanged', data['albums'][i]['id']);
@@ -120,5 +124,41 @@ export default data = {
             this.photosSortedById[photoId]['normalUrl'] = url;
             EventBus.$emit('photoNormalUrlChanged', photoId);
         }
+    },
+    getAllUrlsFromAlbum : function(albumId){
+        var album = this.getAlbum(albumId);
+        if(album == -1){
+            console.error("getAllUrlsFromAlbum("+albumId+") : album doesnt exists");
+            return;
+        }
+        if(!(albumId in this.allAlbumsPhotosUrls)){
+            console.error("getAllUrlsFromAlbum("+albumId+") : album not in this.allAlbumsPhotosUrls");
+            return;
+        }
+
+        // if there is no photo in album, return empty array
+        if(album['photos'].length == 0){
+            return [];
+        }
+
+        // if we allready have the urls of this album, return the urls
+        if(this.allAlbumsPhotosUrls[albumId].length != 0 && this.allAlbumsPhotosUrls[albumId] != 'WAITING_FOR_URLS'){
+            return this.allAlbumsPhotosUrls[albumId];
+        }
+
+        // else, we have to fetch the urls of this album
+        Vue.http.get('images/urls/'+albumId)
+            .then(response =>{ return response.json(); })
+            .then(data =>{
+                this.addUrlsToAlbum(albumId, data['urls']);
+            });
+
+        // return empty array while we are fetching the urls
+        this.allAlbumsPhotosUrls[albumId] = 'WAITING_FOR_URLS';
+        return [];
+    },
+    addUrlsToAlbum : function(albumId, urls){
+        this.allAlbumsPhotosUrls[albumId] = urls;
+        EventBus.$emit('albumPhotosUrlsChanged', albumId);
     }
 }

@@ -6,6 +6,9 @@
             <span class="album-title">{{albumTitle}}</span>
         </div>
     </div>
+    <div class="page-content">
+        <img v-for="img in this.albumPhotosUrls" :src="img['miniatureUrl']"></img>
+    </div>
 </div>
 </template>
 
@@ -18,6 +21,7 @@ export default{
     data : function(){
         return{
             albumTitle : Data.getAlbum(this.id)['albumName'],
+            albumPhotosUrls : []
         }
     },
     methods : {
@@ -25,13 +29,23 @@ export default{
             this.$router.push('/albums/'+this.categoryReferer);
         }
     },
+    beforeMount : function(){
+        var urls = Data.getAllUrlsFromAlbum(this.id);
+        if(typeof urls !== 'undefined'){
+            this.albumPhotosUrls = urls;
+        }
+    },
     created : function(){
         var THIS = this;
         EventBus.$on('albumInfosChanged', function(idAlbum){
             if(THIS.id == idAlbum){
                 THIS.albumTitle = Data.getAlbum(THIS.id)['albumName'];
+                THIS.albumPhotosUrls = Data.getAllUrlsFromAlbum(THIS.id);
             }
         });
+        EventBus.$on('albumPhotosUrlsChanged', function(idAlbum){
+            THIS.albumPhotosUrls = Data.getAllUrlsFromAlbum(THIS.id);
+        })
     }
 }
 </script>
@@ -71,6 +85,10 @@ export default{
 
     .album-title{
         color: white;
+    }
+
+    .page-content{
+        margin-top: 50px;
     }
 
 @media (max-width: 1000px){
